@@ -1,0 +1,9 @@
+{
+  "name": "Trendicasa Bean Bag Store",
+  "short_name": "Trendicasa",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#faf7f2",
+  "theme_color": "#6b3f25",
+  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

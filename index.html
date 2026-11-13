@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#6b3f25">
+  <title>Trendicasa | Bean Bag Store</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#faf7f2;color:#29231f}
+    header{background:#6b3f25;color:white;padding:22px 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    h1{margin:0;font-size:27px}header p{margin:5px 0 0}.hero{padding:36px 5%;background:#ead8c7}
+    .hero h2{font-size:30px;margin:0 0 10px}.wrap{padding:24px 5%;max-width:1100px;margin:auto}
+    .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+    .card{background:white;border:1px solid #e5ddd5;border-radius:14px;padding:16px}
+    .photo{height:140px;background:#f0e7dd;border-radius:10px;display:grid;place-items:center;font-size:48px}
+    .price{font-weight:bold;color:#6b3f25;font-size:20px}.btn{border:0;border-radius:9px;background:#6b3f25;color:white;padding:11px 16px;cursor:pointer}
+    input,select{padding:11px;border:1px solid #cfc5bb;border-radius:8px;width:100%;margin:6px 0 12px}
+    .panel{background:white;padding:18px;border:1px solid #e5ddd5;border-radius:14px;margin-top:22px}
+    footer{text-align:center;padding:25px;color:#6f6258}
+    .notice{background:#fff3cd;padding:12px;border-radius:9px;margin-top:15px}
+  </style>
+</head>
+<body>
+<header><div><h1>Trendicasa</h1><p>Comfort for every home</p></div><div>🛒 Cart: <span id="count">0</span></div></header>
+<section class="hero"><h2>अपना पसंदीदा Bean Bag चुनें</h2><p>XL से लेकर XXXXL तक — भारत में ऑनलाइन ऑर्डर के लिए</p></section>
+<main class="wrap">
+  <h2>हमारे प्रोडक्ट</h2>
+  <div class="products" id="products"></div>
+  <section class="panel">
+    <h2>ऑर्डर रिक्वेस्ट (डेमो)</h2>
+    <p>यह अभी टेस्ट फॉर्म है। असली ऑर्डर और पेमेंट अभी चालू नहीं हैं।</p>
+    <label>आपका नाम</label><input id="customer" placeholder="पूरा नाम">
+    <label>मोबाइल नंबर</label><input id="phone" inputmode="numeric" placeholder="मोबाइल नंबर">
+    <label>पता</label><input id="address" placeholder="पूरा डिलीवरी पता">
+    <button class="btn" onclick="placeOrder()">ऑर्डर रिक्वेस्ट भेजें</button>
+    <div id="result"></div>
+  </section>
+  <section class="panel">
+    <h2>Admin – प्रोडक्ट जोड़ें (सिर्फ इस ब्राउज़र में डेमो)</h2>
+    <label>प्रोडक्ट का नाम</label><input id="newName" placeholder="जैसे XXL Velvet Bean Bag">
+    <label>कीमत (₹)</label><input id="newPrice" type="number" placeholder="जैसे 999">
+    <button class="btn" onclick="addProduct()">प्रोडक्ट जोड़ें</button>
+  </section>
+  <div class="notice">महत्वपूर्ण: यह शुरुआती डेमो है। इसमें सुरक्षित एडमिन लॉगिन, ऑनलाइन डेटाबेस, वास्तविक पेमेंट गेटवे, शिपिंग और ऑर्डर नोटिफिकेशन अभी जुड़े नहीं हैं।</div>
+</main>
+<footer>© Trendicasa</footer>
+<script>
+let products = JSON.parse(localStorage.getItem('tc_products') || 'null') || [
+ {name:'XL Bean Bag',price:799},{name:'XXL Bean Bag',price:999},
+ {name:'XXXL Bean Bag',price:1299},{name:'XXXXL Bean Bag',price:1599}
+];
+let cart=0;
+function render(){document.getElementById('products').innerHTML=products.map((p,i)=>`<article class="card"><div class="photo">🪑</div><h3>${safe(p.name)}</h3><p class="price">₹${Number(p.price).toLocaleString('en-IN')}</p><button class="btn" onclick="cart++;document.getElementById('count').textContent=cart">कार्ट में जोड़ें</button></article>`).join('');}
+function safe(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function addProduct(){let n=document.getElementById('newName').value.trim(),p=Number(document.getElementById('newPrice').value);if(!n||!p){alert('नाम और कीमत भरें');return;}products.push({name:n,price:p});localStorage.setItem('tc_products',JSON.stringify(products));render();document.getElementById('newName').value='';document.getElementById('newPrice').value='';}
+function placeOrder(){let n=document.getElementById('customer').value.trim(),p=document.getElementById('phone').value.trim(),a=document.getElementById('address').value.trim();if(!n||!p||!a){alert('कृपया सभी जानकारी भरें');return;}document.getElementById('result').textContent='डेमो रिक्वेस्ट तैयार हुई। यह सर्वर पर नहीं भेजी गई है।';}
+render();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
+</script>
+</body>
+</html>
